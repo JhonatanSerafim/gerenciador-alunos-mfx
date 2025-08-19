@@ -1,11 +1,465 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRUD - Frontend</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    /* Estilos específicos para o modal */
+    .popup {
+      max-width: 1100px;
+      width: 95%;
+      max-height: 85vh;
+      overflow: visible;
+    }
+    
+    .popup-content {
+      padding: 20px;
+    }
+    
+    .popup-title {
+      margin-bottom: 20px;
+      font-size: 1.6rem;
+      text-align: center;
+    }
+    
+    /* Grid flexível para os campos */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 0;
+    }
+    
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .form-group.half-width {
+      grid-column: span 2;
+    }
+    
+    .form-group.quarter-width {
+      grid-column: span 1;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.85rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 2px solid #e1e5e9;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      background: white;
+      box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+    
+    .form-group input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    
+    .form-group input[type="number"]::-webkit-outer-spin-button,
+    .form-group input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    /* Botões de ação */
+    .popup-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #e1e5e9;
+    }
+    
+    .btn-cancelar,
+    .btn-confirmar {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+    
+    .btn-cancelar {
+      background: #dc3545;
+      color: white;
+    }
+    
+    .btn-cancelar:hover {
+      background: #c82333;
+      transform: translateY(-1px);
+    }
+    
+    .btn-confirmar {
+      background: #7c3aed;
+      color: white;
+    }
+    
+    .btn-confirmar:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+    }
+    
+    /* Sistema de Toast */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      pointer-events: none;
+    }
+    
+    .toast {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      margin-bottom: 10px;
+      padding: 16px 20px;
+      min-width: 300px;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: auto;
+      animation: toastSlideIn 0.3s ease-out;
+      border-left: 4px solid;
+    }
+    
+    .toast.success {
+      border-left-color: #28a745;
+    }
+    
+    .toast.error {
+      border-left-color: #dc3545;
+    }
+    
+    .toast.warning {
+      border-left-color: #ffc107;
+    }
+    
+    .toast.info {
+      border-left-color: #17a2b8;
+    }
+    
+    .toast-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    
+    .toast.success .toast-icon {
+      color: #28a745;
+    }
+    
+    .toast.error .toast-icon {
+      color: #dc3545;
+    }
+    
+    .toast.warning .toast-icon {
+      color: #ffc107;
+    }
+    
+    .toast.info .toast-icon {
+      color: #17a2b8;
+    }
+    
+    .toast-content {
+      flex: 1;
+    }
+    
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+    
+    .toast-message {
+      color: #666;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    
+    .toast-close {
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+    
+    .toast-close:hover {
+      background: #f5f5f5;
+      color: #666;
+    }
+    
+    @keyframes toastSlideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .toast.fade-out {
+      animation: toastFadeOut 0.3s ease-in forwards;
+    }
+    
+    @keyframes toastFadeOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .form-group.full-width,
+      .form-group.half-width,
+      .form-group.quarter-width {
+        grid-column: 1;
+      }
+      
+      .popup {
+        width: 98%;
+        margin: 10px;
+      }
+      
+      .popup-content {
+        padding: 15px;
+      }
+      
+      .popup-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn-cancelar,
+      .btn-confirmar {
+        width: 100%;
+        max-width: 200px;
+      }
+      
+      .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+      }
+      
+      .toast {
+        min-width: auto;
+        max-width: none;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Gerenciador de alunos</h1>
+  <h1 class="header-title">Gerenciador de Usuários</h1>
+
+  <div class="search-container">
+    <div class="search-box">
+        <input type="text" id="search-input" placeholder="Pesquisar por nome ou localidade..." />
+        <button type="button" id="btn-pesquisar">Pesquisar</button>
+        <button type="button" onclick="limparFiltros()" class="btn-clear">Limpar</button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Localidade</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center; color: #666; padding: 20px;">
+            Carregando usuários...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button id="btn-abrir-modal" class="add-button" title="Adicionar novo usuário">+</button>
+
+  <div class="popup-wrapper hidden" id="popup-wrapper">
+  <div class="popup">
+    <div class="popup-header">
+      <span class="popup-close" id="popup-close-x" title="Fechar">×</span>
+    </div>
+    <div class="popup-content">
+      <h2 class="popup-title">Criar Usuário</h2>
+      <form class="popup-form" id="form-criar-usuario">
+        <div class="form-grid">
+          <!-- Primeira linha: Nome (2 colunas) + Idade (1 coluna) + CEP (1 coluna) -->
+          <div class="form-group half-width">
+            <label for="nome">Nome Completo *</label>
+            <input type="text" name="nome" id="nome" required placeholder="Digite o nome completo" />
+          </div>
+          
+          <div class="form-group quarter-width">
+            <label for="idade">Idade *</label>
+            <input type="number" name="idade" id="idade" required placeholder="Idade" min="1" max="120" />
+          </div>
+          
+          <div class="form-group quarter-width">
+            <label for="cep">CEP *</label>
+            <input type="text" name="cep" id="cep" required placeholder="00000-000" maxlength="9" />
+          </div>
+          
+          <!-- Segunda linha: Localidade (2 colunas) + UF (1 coluna) + Número (1 coluna) -->
+          <div class="form-group half-width">
+            <label for="localidade">Localidade *</label>
+            <input type="text" name="localidade" id="localidade" required placeholder="Digite a cidade" />
+          </div>
+          
+          <div class="form-group quarter-width">
+            <label for="uf">UF *</label>
+            <select name="uf" id="uf" required>
+              <option value="">Estado</option>
+              <option value="AC">AC</option>
+              <option value="AL">AL</option>
+              <option value="AP">AP</option>
+              <option value="AM">AM</option>
+              <option value="BA">BA</option>
+              <option value="CE">CE</option>
+              <option value="DF">DF</option>
+              <option value="ES">ES</option>
+              <option value="GO">GO</option>
+              <option value="MA">MA</option>
+              <option value="MT">MT</option>
+              <option value="MS">MS</option>
+              <option value="MG">MG</option>
+              <option value="PA">PA</option>
+              <option value="PB">PB</option>
+              <option value="PR">PR</option>
+              <option value="PE">PE</option>
+              <option value="PI">PI</option>
+              <option value="RJ">RJ</option>
+              <option value="RN">RN</option>
+              <option value="RS">RS</option>
+              <option value="RO">RO</option>
+              <option value="RR">RR</option>
+              <option value="SC">SC</option>
+              <option value="SP">SP</option>
+              <option value="SE">SE</option>
+              <option value="TO">TO</option>
+            </select>
+          </div>
+          
+          <div class="form-group quarter-width">
+            <label for="numero">Número *</label>
+            <input type="text" name="numero" id="numero" required placeholder="Nº" />
+          </div>
+          
+          <!-- Terceira linha: Bairro (2 colunas) + Logradouro (2 colunas) -->
+          <div class="form-group half-width">
+            <label for="bairro">Bairro *</label>
+            <input type="text" name="bairro" id="bairro" required placeholder="Digite o bairro" />
+          </div>
+          
+          <div class="form-group half-width">
+            <label for="logradouro">Logradouro *</label>
+            <input type="text" name="logradouro" id="logradouro" required placeholder="Digite a rua/avenida" />
+          </div>
+        </div>
+        
+        <div class="popup-actions">
+          <button type="button" id="btn-cancelar" class="btn-cancelar">Cancelar</button>
+          <button type="submit" class="btn-confirmar">Criar Usuário</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Deletar Usuário -->
+<div class="popup-wrapper hidden" id="popup-delete-wrapper">
+  <div class="popup">
+    <div class="popup-header">
+      <span class="popup-close" id="popup-delete-close-x" title="Fechar">×</span>
+    </div>
+    <div class="popup-content">
+      <h2 class="popup-title" style="color: #e74c3c;">⚠️ Deletar Usuário</h2>
+      <div class="delete-info">
+        <p style="text-align: center; color: #666; margin-bottom: 1.5rem;">
+          Tem certeza que deseja deletar este usuário?
+        </p>
+        <div class="user-info" style="background: #f8f9fa; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+          <strong>Nome:</strong> <span id="delete-user-name">-</span><br>
+          <strong>Localidade:</strong> <span id="delete-user-localidade">-</span>
+        </div>
+        <p style="color: #e74c3c; font-size: 0.9rem; text-align: center;">
+          <strong>⚠️ Esta ação não pode ser desfeita!</strong>
+        </p>
+      </div>
+      <div class="popup-actions">
+        <button type="button" id="btn-delete-cancelar" class="btn-cancelar">Cancelar</button>
+        <button type="button" id="btn-delete-confirmar" class="btn-delete-confirmar">🗑️ Deletar Usuário</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Container para os Toasts -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="./js/toast.js"></script>
+<script src="./js/get.js"></script>
+<script src="./js/post.js"></script>
+<script src="./js/put.js"></script>
+<script src="./js/delete.js"></script>
+<script src="./js/filter.js"></script>
+<script src="./js/script.js"></script>
+
 </body>
 </html>

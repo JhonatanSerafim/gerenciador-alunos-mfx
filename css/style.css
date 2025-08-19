@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+* {
+  font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+}
+
+.header-title {
+      color: #a16ee5;
+      font-size: 2rem;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    .search-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-box {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  align-items: center;
+}
+
+.search-box input[type="text"] {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e9d7fa;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  background: #fff;
+  color: #444;
+  font-family: inherit;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.search-box input[type="text"]:focus {
+  border: 1.5px solid #a16ee5;
+  background: #f7f7fa;
+}
+
+.search-box button {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, #b576d9 0%, #a16ee5 100%);
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border: 1px solid #a16ee5;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.search-box button:hover {
+  background: linear-gradient(90deg, #a16ee5 0%, #b576d9 100%);
+}
+
+.search-box .btn-clear {
+  background: linear-gradient(90deg, #6b7280 0%, #9ca3af 100%);
+  border-color: #6b7280;
+}
+
+.search-box .btn-clear:hover {
+  background: linear-gradient(90deg, #9ca3af 0%, #6b7280 100%);
+}
+
+
+    .table-container {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 900px;
+      background: #fff;
+      border-radius: 1.25rem;
+      box-shadow: 0 0.25rem 2rem rgba(161, 110, 229, 0.13);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #f3e8fd;
+      color: #7c6f92;
+      font-weight: 600;
+    }
+
+    td {
+      color: #444;
+    }
+
+    .btn-editar,
+.btn-deletar {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  font-family: inherit;
+}
+
+/* Botão Editar */
+.btn-editar {
+  background: #e9d7fa;
+  color: #7c3aed;
+  border: 1px solid #d6bbfb;
+}
+
+.btn-editar:hover {
+  background: #d6bbfb;
+  box-shadow: 0 2px 8px rgba(161, 110, 229, 0.2);
+}
+
+/* Botão Deletar */
+.btn-deletar {
+  background: #ffeaea;
+  color: #e74c3c;
+  border: 1px solid #f5c2c0;
+  margin-left: 0.5rem;
+}
+
+.btn-deletar:hover {
+  background: #f5c2c0;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+}
+
+    .add-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(90deg, #b576d9 0%, #a16ee5 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 2rem;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0.25rem 1rem rgba(161, 110, 229, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .add-button:hover {
+      background: linear-gradient(90deg, #a16ee5 0%, #b576d9 100%);
+    }
+
+    @media (max-width: 600px) {
+      .search-container {
+        flex-direction: column;
+        padding: 0 1rem;
+      }
+
+      .search-container input {
+        width: 100%;
+      }
+
+      .table-container {
+        width: 95%;
+      }
+    }
+
+/* MODAIS */
+
+.hidden {
+  display: none;
+}
+
+.popup-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(68, 68, 68, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Classe para esconder os modais - especificidade maior */
+.popup-wrapper.hidden {
+  display: none !important;
+}
+
+.popup {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 2rem rgba(161, 110, 229, 0.2);
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.popup-header {
+  text-align: right;
+}
+
+.popup-close {
+  font-size: 1.5rem;
+  color: #a16ee5;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.popup-title {
+  font-size: 1.3rem;
+  color: #7c3aed;
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+
+.popup-content label {
+  display: block;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.popup-form .form-group {
+  margin-bottom: 0.6rem;
+}
+
+.popup-form .form-row .form-group {
+  margin-bottom: 0;
+}
+
+.popup-form input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e9d7fa;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  background: #fff;
+  color: #444;
+  font-family: inherit;
+  transition: border 0.2s;
+}
+
+.popup-form input:focus {
+  border-color: #a16ee5;
+  outline: none;
+  background: #f7f7fa;
+}
+
+/* Tamanhos específicos baseados na quantidade de caracteres */
+#state {
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  text-align: center;
+  font-weight: 600;
+}
+
+#zip_code {
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  text-align: center;
+}
+
+/* Inputs do modal simplificado - layout vertical */
+#nome, #email, #password {
+  width: 100% !important;
+  min-width: auto !important;
+  max-width: none !important;
+  box-sizing: border-box;
+}
+
+/* Melhorar alinhamento dos inputs em linha */
+.form-row {
+  align-items: end;
+  flex-wrap: nowrap;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Botões */
+.btn-cancelar {
+  background: #ffeaea;
+  color: #e74c3c;
+  border: 1px solid #f5c2c0;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background: #f5c2c0;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+}
+
+.btn-confirmar {
+  background: #e9d7fa;
+  color: #7c3aed;
+  border: 1px solid #d6bbfb;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-confirmar:hover {
+  background: #d6bbfb;
+  box-shadow: 0 2px 8px rgba(161, 110, 229, 0.2);
+}
+
+.btn-delete-confirmar {
+  background: #e74c3c;
+  color: white;
+  border: 1px solid #c0392b;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.btn-delete-confirmar:hover {
+  background: #c0392b;
+  border-color: #a93226;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-delete-confirmar:disabled {
+  background: #bdc3c7;
+  color: #7f8c8d;
+  border-color: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
